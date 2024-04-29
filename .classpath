@@ -4,5 +4,8 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/rubym/Downloads/jboss-eap-7.3.0/jboss-eap-7.3/modules/system/layers/base/javax/persistence/api/main/jakarta.persistence-api-2.2.3.redhat-00001.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rubym/Downloads/jboss-eap-7.3.0/jboss-eap-7.3/modules/system/layers/base/javax/validation/api/main/jakarta.validation-api-2.0.2.redhat-00001.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rubym/Downloads/jboss-eap-7.3.0/jboss-eap-7.3/modules/system/layers/base/javax/ejb/api/main/jboss-ejb-api_3.2_spec-2.0.0.Final-redhat-00001.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
