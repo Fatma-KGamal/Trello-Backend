@@ -11,25 +11,25 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	@NotNull
-	private String name;
-	@NotNull
+	private long id;
+	@NotNull (message="Username cannot be a null value")
+	private String username;
+	@NotNull (message="Email cannot be a null value")
 	private String email;
-	@NotNull
+	@NotNull (message="Passsword cannot be a null value")
 	private String password;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getEmail() {
 		return email;
