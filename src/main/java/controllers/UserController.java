@@ -6,14 +6,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+//import javax.ws.rs.FormParam;
 
+import models.User;
 import services.UserService;
 
 @Stateless
@@ -30,9 +32,9 @@ public class UserController {
 	
 	@POST
 	@Path("/register")
-	public Response register(@FormParam("username") String username, @FormParam("email") String email, @FormParam("password") String password) {
+	public Response register(User user) {
 		try {
-			userService.register(username,email, password);
+			userService.register(user);
 			return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
 			} catch (IllegalArgumentException e) {
 				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -42,7 +44,7 @@ public class UserController {
 	
 	@POST
     @Path("/login")
-    public Response login(@FormParam("email") String email, @FormParam("password") String password) {
+    public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
         try {
             userService.login(email, password);
             return Response.status(Response.Status.OK).entity("Login successful").build();
@@ -53,7 +55,7 @@ public class UserController {
 	
 	@PUT
 	@Path("/editprofile/{id}")
-	public Response editProfile(@PathParam("id") long userId, @FormParam("username") String newUsername, @FormParam("email") String newEmail, @FormParam("password") String newPassword) {
+	public Response editProfile(@PathParam("id") long userId, @QueryParam("username") String newUsername, @QueryParam("email") String newEmail, @QueryParam("password") String newPassword) {
 	    try {
 	        userService.editProfile(userId, newUsername, newEmail, newPassword);
 	        return Response.status(Response.Status.OK).entity("User profile updated successfully").build();
@@ -61,5 +63,5 @@ public class UserController {
 	        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 	    }
 	}
-
+	
 }

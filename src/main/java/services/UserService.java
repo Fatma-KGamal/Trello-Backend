@@ -3,7 +3,7 @@ package services;
 import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
+//import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -13,29 +13,28 @@ import models.User;
 @Stateless
 public class UserService {
 	
-	@Inject 
+	
 	User user;
 	
-	@PersistenceContext
+	@PersistenceContext (name="trello")
     private EntityManager entityManager;
 	
 	
 	// Register user using email and password (create account)
-	public void register(String username,String email, String password) throws IllegalArgumentException {
-		if (!validUsername(username)) 
+	public void register(User user) throws IllegalArgumentException {
+		if (!validUsername(user.getUsername())) 
 		{
             throw new IllegalArgumentException("Invalid username");
         }
-		else if (!validEmail(email))
+		else if (!validEmail(user.getEmail()))
         {
             throw new IllegalArgumentException("Invalid email address");
         } 
-        else if (!validPassword(password))
+        /*else if (!validPassword(user.getPassword()))
         {
             throw new IllegalArgumentException("Invalid password");
-        }
+        }*/
 
-        user = new User();
         entityManager.persist(user);
     }
 	
@@ -67,10 +66,10 @@ public class UserService {
 		{
             throw new IllegalArgumentException("Invalid email address");
         } 
-		else if (!validPassword(newPassword)) 
+		/*else if (!validPassword(newPassword)) 
 		{
             throw new IllegalArgumentException("Invalid password");
-        }
+        }*/
 
         user.setUsername(newUsername);
         user.setEmail(newEmail);
@@ -98,6 +97,8 @@ public class UserService {
 		String regex = " (?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
 		return Pattern.matches(regex, password);	
 	}
+
+
 
 	
 	
