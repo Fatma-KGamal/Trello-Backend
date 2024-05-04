@@ -1,9 +1,12 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -24,7 +27,7 @@ public class User {
 	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getUsername() {
@@ -55,8 +58,18 @@ public class User {
 	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", admin="
+		return ", User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", admin="
 				+ admin + "]";
+	}
+	
+	@ManyToMany (mappedBy="users")
+	private List<Board> userBoards;
+
+	public List<Board> getUserBoards() {
+		return userBoards;
+	}
+	public void setUserBoards(List<Board> userBoards) {
+		this.userBoards = userBoards;
 	}
 	
 

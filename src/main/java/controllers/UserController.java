@@ -26,7 +26,7 @@ public class UserController {
 	@Inject
     private UserService userService;
 	
-	@PersistenceContext
+	@PersistenceContext (name="trello")
     private EntityManager entityManager;
 	
 	@POST
