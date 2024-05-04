@@ -19,6 +19,8 @@ public class User {
 	@NotNull (message="Passsword cannot be a null value")
 	private String password;
 	
+	private boolean admin;
+	
 	public long getId() {
 		return id;
 	}
@@ -37,11 +39,24 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public boolean isAdmin() {
+		return admin;
+	}
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", admin="
+				+ admin + "]";
 	}
 	
 

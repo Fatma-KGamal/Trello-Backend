@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-//import javax.ws.rs.FormParam;
 
 import models.User;
 import services.UserService;
@@ -35,7 +34,7 @@ public class UserController {
 	public Response register(User user) {
 		try {
 			userService.register(user);
-			return Response.status(Response.Status.CREATED).entity("User registered successfully").build();
+			return Response.status(Response.Status.CREATED).entity("User registered successfully" + user).build();
 			} catch (IllegalArgumentException e) {
 				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 				}
