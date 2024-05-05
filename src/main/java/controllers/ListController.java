@@ -42,8 +42,8 @@ public class ListController {
 	
 	//Users can delete a list.
 	@DELETE
-	@Path("/delete/{boardId}/{listID}")
-	public Response deleteList(@PathParam ("boardId") long boardId , @PathParam ("listdId") long listId) {
+	@Path("/delete/{boardId}/{listId}")
+	public Response deleteList(@PathParam ("boardId") long boardId , @PathParam ("listId") long listId) {
 		try {
 			listService.deleteList(boardId,listId);
 			return Response.status(Response.Status.OK).entity("List deleted successfully").build();

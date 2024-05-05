@@ -53,11 +53,18 @@ public class ListService {
 		        cardList = entityManager.find(CardList.class, listId);
 		        if (cardList != null) {
 		            board.getCardList().remove(cardList);
+		            cardList.setBoard(null);
 		            entityManager.merge(board);
-		            //cardList = entityManager.merge(cardList);
+//		            cardList = entityManager.merge(cardList);
 		            entityManager.remove(cardList);
-		        }
+		            entityManager.flush();
+				} else {
+					throw new IllegalArgumentException("List not found");
+				}
 		    }
+		    else {
+				throw new IllegalArgumentException("Board not found");
+			}
 		}
 	}
 }
