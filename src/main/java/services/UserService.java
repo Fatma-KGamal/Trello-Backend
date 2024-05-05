@@ -38,6 +38,7 @@ public class UserService {
 	public User login(String email, String password) throws IllegalArgumentException {
         try {
             user = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
+            user.setCurrentUser(true);
             if (!user.getPassword().equals(password)) 
             {
                 throw new IllegalArgumentException("Incorrect password");

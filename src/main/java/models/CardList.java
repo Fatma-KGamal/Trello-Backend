@@ -10,26 +10,28 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class CardList {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int listId;
-	private String category;
+	private long listId;
+	private String categoryName;
 	private ArrayList <Card> cards;
 	
-	public int getId() {
+	public long getId() {
 		return listId;
 	}
-	public void setId(int id) {
-		this.listId = id;
+	public void setId(long listId) {
+		this.listId = listId;
 	}
 	public String getCategory() {
-		return category;
+		return categoryName;
 	}
 	public void setCategory(String category) {
-		this.category = category;
+		this.categoryName = category;
 	}
 	public ArrayList<Card> getCards() {
 		return cards;
@@ -40,6 +42,7 @@ public class CardList {
 	
 	@ManyToOne 
 	@JoinColumn(name="boardId")
+	@JsonBackReference
 	private Board board;
 
 	public Board getBoard() {
@@ -48,4 +51,5 @@ public class CardList {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
 }

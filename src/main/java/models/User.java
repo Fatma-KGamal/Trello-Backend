@@ -1,13 +1,17 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
@@ -22,6 +26,14 @@ public class User {
 	@NotNull (message="Passsword cannot be a null value")
 	private String password;
 	
+	private static boolean currentUser;
+	public static boolean isCurrentUser() {
+		return currentUser;
+	}
+	public void setCurrentUser(boolean currentUser) {
+		User.currentUser = currentUser;
+	}
+
 	private boolean admin;
 	
 	public long getId() {
@@ -58,12 +70,13 @@ public class User {
 	
 	@Override
 	public String toString() {
-		return ", User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", admin="
+		return " , User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", admin="
 				+ admin + "]";
 	}
 	
-	@ManyToMany (mappedBy="users")
-	private List<Board> userBoards;
+	@ManyToMany (mappedBy="users" , fetch = FetchType.EAGER)
+	@JsonIgnore
+	private List<Board> userBoards = new ArrayList<Board>();
 
 	public List<Board> getUserBoards() {
 		return userBoards;

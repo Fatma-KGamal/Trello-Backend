@@ -1,8 +1,11 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,11 +14,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"boardName"}))
 public class Board {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long boardId;
@@ -34,7 +41,7 @@ public class Board {
 		this.boardName = boardName;
 	}
 	
-	@ManyToMany
+	@ManyToMany (fetch = FetchType.LAZY)
 	@JoinTable(name = "user_board", joinColumns = @JoinColumn(name = "board_id"), inverseJoinColumns = @JoinColumn(name = "id"))
 	private List <User> users;
 	
@@ -45,8 +52,9 @@ public class Board {
 		this.users = users;
 	}
 	
-	@OneToMany (mappedBy="board")
-	private List <CardList> cardList;
+	@OneToMany (mappedBy="board" , fetch = FetchType.EAGER , cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private List <CardList> cardList = new ArrayList<CardList>();
 	
 	public List<CardList> getCardList() {
 		return cardList;
@@ -57,6 +65,7 @@ public class Board {
 	
 	@Override
 	public String toString() {
-		return " , Board [board_id=" + boardId + ", boardName=" + boardName + "]";
+		return "Board [boardId=" + boardId + ", boardName=" + boardName + ", users=" + users + ", cardList=" + cardList + "]";
 	}
+	
 }

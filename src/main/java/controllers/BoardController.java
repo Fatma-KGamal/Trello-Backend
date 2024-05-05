@@ -36,8 +36,8 @@ public class BoardController {
 	@Path("/create")
 	public Response createBoard(String name) {
 			try {
-            boardService.createBoard(name);
-            return Response.status(Response.Status.CREATED).entity("Board created successfully").build();
+            Board newBoard= boardService.createBoard(name);
+            return Response.status(Response.Status.CREATED).entity("Board created successfully \n" + newBoard).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
@@ -75,12 +75,11 @@ public class BoardController {
 		}
 	}
 	
-//	//Users can view all boards
-//	@GET
-//	@Path("/getBoards")
-//	public List<Board> getAllBoards() {
-//		TypedQuery<Board> query = entityManager.createQuery("SELECT b from Board b", Board.class);
-//		return query.getResultList();
-//	}
+	//Users can view all boards
+	@GET
+	@Path("/boards")
+	public List<Board> getAllBoards() {
+		return boardService.getAllBoards();
+	}
 
 }
