@@ -22,45 +22,45 @@ import services.UserService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserController {
-	
+
 	@Inject
-    private UserService userService;
-	
-	@PersistenceContext (name="trello")
-    private EntityManager entityManager;
-	
+	private UserService userService;
+
+	@PersistenceContext(name = "trello")
+	private EntityManager entityManager;
+
 	@POST
 	@Path("/register")
 	public Response register(User user) {
 		try {
 			userService.register(user);
 			return Response.status(Response.Status.CREATED).entity("User registered successfully" + user).build();
-			} catch (IllegalArgumentException e) {
-				return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-				}
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
-	
-	
+	}
+
 	@POST
-    @Path("/login")
-    public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
-        try {
-            userService.login(email, password);
-            return Response.status(Response.Status.OK).entity("Login successful").build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
-        }
-    }
-	
+	@Path("/login")
+	public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
+		try {
+			userService.login(email, password);
+			return Response.status(Response.Status.OK).entity("Login successful").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
+		}
+	}
+
 	@PUT
 	@Path("/editprofile/{id}")
-	public Response editProfile(@PathParam("id") long userId, @QueryParam("username") String newUsername, @QueryParam("email") String newEmail, @QueryParam("password") String newPassword) {
-	    try {
-	        userService.editProfile(userId, newUsername, newEmail, newPassword);
-	        return Response.status(Response.Status.OK).entity("User profile updated successfully").build();
-	    } catch (IllegalArgumentException e) {
-	        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-	    }
+	public Response editProfile(@PathParam("id") long userId, @QueryParam("username") String newUsername,
+			@QueryParam("email") String newEmail, @QueryParam("password") String newPassword) {
+		try {
+			userService.editProfile(userId, newUsername, newEmail, newPassword);
+			return Response.status(Response.Status.OK).entity("User profile updated successfully").build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
-	
+
 }
