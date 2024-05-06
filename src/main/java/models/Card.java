@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class Card {
@@ -48,6 +50,7 @@ public class Card {
 	
 	@ManyToOne
 	@JoinColumn(name="listId")
+	@JsonBackReference
 	private CardList cardList;
 	
 	public CardList getCardList()

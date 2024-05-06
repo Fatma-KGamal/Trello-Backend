@@ -95,5 +95,6 @@ public class User {
 	public void setUserBoards(List<Board> userBoards) {
 		this.userBoards = userBoards;
 	}
+	
 
 }

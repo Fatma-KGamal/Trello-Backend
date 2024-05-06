@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class CardList {
@@ -56,7 +58,8 @@ public class CardList {
 		this.board = board;
 	}
 	
-	@OneToMany(mappedBy="cardList")
+	@OneToMany(mappedBy="cardList" , fetch = FetchType.EAGER)
+	@JsonManagedReference
 	private List <Card> card = new ArrayList<Card>();
 
 	public List<Card> getCard() {
