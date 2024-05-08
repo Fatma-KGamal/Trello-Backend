@@ -1,9 +1,12 @@
 package services;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
 
 import messaging.JMSClient;
@@ -45,6 +48,8 @@ public class ListService {
 					entityManager.persist(cardList);
 					board.getCardList().add(cardList);
 					entityManager.merge(board);
+					// notify users when a list is created
+					notifyList("List created: " + categoryName);
 					return Response.status(Response.Status.CREATED).entity("list created successfully \n").build();
 				} else {
 					return Response.status(Response.Status.BAD_REQUEST).entity("Board not found").build();
@@ -85,6 +90,11 @@ public class ListService {
 		// notify users when a list is deleted
 		notifyList("List deleted: " + cardList.getCategory());
 		return Response.status(Response.Status.OK).entity("List deleted successfully").build();
+	}
+	
+	public List<CardList> getAllLists() {
+		TypedQuery<CardList> query = entityManager.createQuery("SELECT c from CardList c", CardList.class);
+		return query.getResultList();
 	}
 
 	// notify users when a list is created
