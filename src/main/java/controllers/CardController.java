@@ -37,15 +37,9 @@ public class CardController {
 	@POST
 	@Path("create/{listId}")
 	public Response createCard(@PathParam("listId")long listId,Card card) {
-		try {
-	    cardService.createCard(listId,card);
-        return Response.status(Response.Status.CREATED).entity("Card created successfully \n" ).build();
-    } 
-		catch (IllegalArgumentException e) 
-		{
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
+	    return cardService.createCard(listId,card);
 	}
+   
 	
 	@PUT
 	@Path("addComment/{cardId}")
@@ -76,23 +70,15 @@ public class CardController {
 	@PUT
 	@Path("assignUser/{cardId}/{userId}")
 	public Response assignUser(@PathParam("cardId") long cardId, @PathParam("userId") long userId) {
-		try {
-			cardService.assignCardToUser(cardId, userId);
-			return Response.status(Response.Status.OK).entity("User assigned successfully").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+		return	cardService.assignCardToUser(cardId, userId);
+			
 	}
 	
 	@PUT
 	@Path("moveCard/{cardId}/{listId}")
 	public Response moveToList(@PathParam("cardId") long cardId, @PathParam("listId") long newListId) {
-		try {
-			cardService.moveCardToList(cardId, newListId);
-			return Response.status(Response.Status.OK).entity("Card moved successfully").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+		return cardService.moveCardToList(cardId, newListId);
+			
 	}
 	
 	@GET

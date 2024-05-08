@@ -41,12 +41,11 @@ public class ListService {
 		        entityManager.persist(cardList);
 		        board.getCardList().add(cardList);
 		        entityManager.merge(board);
-		        return Response.status(Response.Status.CREATED).entity("list created successfully \n").build();
+		        return Response.status(Response.Status.CREATED).entity("list created successfully \n" ).build();
 		        }
-		    else
-		    {
-		    	throw new IllegalArgumentException("Board not found");
-		    }
+		    else {
+		    	return Response.status(Response.Status.BAD_REQUEST).entity("Board not found").build();
+			}
 		}
 		}
    }

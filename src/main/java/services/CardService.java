@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.core.Response;
 
 import models.Card;
 import models.CardList;
@@ -21,11 +22,12 @@ public class CardService {
 	private EntityManager entityManager;
 	
 	
-	public Card createCard(long listId,Card currentCard) {
+	public Response createCard(long listId,Card currentCard) {
 		if (User.isCurrentUser() == false) {
-			throw new IllegalArgumentException("User not logged in");
-		}
+			return Response.status(Response.Status.BAD_REQUEST).entity("User is not logged in").build();
+			}
 	    cardList = entityManager.find(CardList.class, listId);
+	    
 	    if (cardList == null) {
 	        throw new IllegalArgumentException("List not found");
 	    }
@@ -38,8 +40,8 @@ public class CardService {
 	     entityManager.persist(card);
 	     cardList.getCard().add(card);
 	     entityManager.merge(cardList);
-	    return card;
-	}   
+	     return Response.status(Response.Status.CREATED).entity("Card created successfully \n" +card ).build();
+	     }   
 	
 	 public void addComment(long cardId,Card commentCard)
 	 {
@@ -64,11 +66,11 @@ public class CardService {
 	 }
 	
 	
-	 public void assignCardToUser(long cardId, long userId) {
+	 public Response assignCardToUser(long cardId, long userId) {
 		 User user ;
 		 	if (User.isCurrentUser() == false) {
-				throw new IllegalArgumentException("User not logged in");
-			}
+		 		return Response.status(Response.Status.BAD_REQUEST).entity("User is not logged in").build();
+		 		}
 		 	else {
 		 		 
 	        card = entityManager.find(Card.class, cardId);
@@ -76,27 +78,28 @@ public class CardService {
 	        
 	        boolean isUserInvited = card.getCardList().getBoard().getUsers().contains(user);
 	 	    if (isUserInvited == false) {
-	 	        throw new IllegalArgumentException("User is not invited to the board");
+	 	    	return Response.status(Response.Status.BAD_REQUEST).entity("User is not invited in the board ").build();
 	 	    }
 	 	    else {
 	        user.getUserCards().add(card);
 	        card.getAssignedUsers().add(user);
 	        entityManager.merge(card);
 	        entityManager.merge(user);
+	        return Response.status(Response.Status.CREATED).entity(" User assigned to " + card.getCardName() + " card successfully \n" ).build();
 		 	}
 		 	}
 	    }
 	 
-	 public void moveCardToList(long cardId, long newListId) {
+	 public Response moveCardToList(long cardId, long newListId) {
 	        if (User.isCurrentUser() == false) {
-	            throw new IllegalArgumentException("User not logged in");
-	        } else {
+	        	return Response.status(Response.Status.BAD_REQUEST).entity("User is not logged in").build();
+		 		} else {
 	            card = entityManager.find(Card.class, cardId);
 	            cardList = entityManager.find(CardList.class, newListId);
 
 	            if (cardList == null) {
-	                throw new IllegalArgumentException("List not found");
-	            }
+	            	return Response.status(Response.Status.BAD_REQUEST).entity("List not found").build();
+			 		}
 
 	            CardList oldList = card.getCardList();
 	            oldList.getCard().remove(card);
@@ -107,6 +110,8 @@ public class CardService {
 	            entityManager.merge(card);
 	            entityManager.merge(oldList);
 	            entityManager.merge(cardList);
+	            return Response.status(Response.Status.OK).entity("Card moved to "+ cardList.getCategory() + " successfully ").build();
+	    		
 	        }
 	    }
 	 public List<Card> getAllCards() {

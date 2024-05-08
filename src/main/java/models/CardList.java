@@ -55,6 +55,7 @@ public class CardList {
 	public List<Card> getCard() {
 		return card;
 	}
+	
 	public void setCard(List<Card> card) {
 		this.card = card;
 	}
