@@ -48,7 +48,7 @@ public class BoardService {
 				user.setUserBoards(boards);
 				entityManager.merge(user);
 				// notify users when a board is created
-				notifyBoard("New board created: " + name);
+				notifyBoard("New board created: " + name + " by "+ user.getUsername() + " successfully");
 				return Response.status(Response.Status.CREATED).entity("Board created successfully \n" + board).build();
 			}
 		}
@@ -77,7 +77,7 @@ public class BoardService {
 					entityManager.remove(board);
 //					entityManager.flush();
 					// notify users when a board is deleted
-					notifyBoard("Board deleted: " + board.getBoardName());
+					notifyBoard("Board deleted: " + board.getBoardName() + " by "+ user.getUsername() + " successfully");
 					return Response.status(Response.Status.OK).entity("Board deleted successfully").build();
 				} catch (IllegalArgumentException e) {
 					return Response.status(Response.Status.BAD_REQUEST).entity("no boards").build();
@@ -121,8 +121,9 @@ public class BoardService {
 				board.getUsers().add(user);
 				entityManager.merge(board);
 				entityManager.merge(user);
-				// notify users when a user is invited
-				notifyBoard("User invited to board: " + user.getUsername());
+				// notify user when a user is invited
+				notifyBoard("User " + user.getUsername() + " invited to " + board.getBoardName());
+				
 				return Response.status(Response.Status.OK).entity("User invited Successfully").build();
 			}
 		}

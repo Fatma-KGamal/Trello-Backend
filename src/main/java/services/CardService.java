@@ -44,6 +44,8 @@ public class CardService {
 		entityManager.persist(card);
 		cardList.getCard().add(card);
 		entityManager.merge(cardList);
+		// notify user when card is created
+		notifyUser("Card " + card.getCardName() + " created successfully ");
 		return Response.status(Response.Status.CREATED).entity("Card created successfully \n" + card).build();
 	}
 
@@ -89,7 +91,8 @@ public class CardService {
 				entityManager.merge(card);
 				entityManager.merge(user);
 				// notify user when assigned to a card
-				notifyUser("User assigned to " + card.getCardName() + " card successfully ");
+				notifyUser("User " + user.getUsername() + " assigned to " + card.getCardName() + " card successfully ");
+				
 				return Response.status(Response.Status.CREATED)
 						.entity(" User assigned to " + card.getCardName() + " card successfully \n").build();
 			}
@@ -117,7 +120,8 @@ public class CardService {
 			entityManager.merge(oldList);
 			entityManager.merge(cardList);
 			// notify user when card is moved
-			notifyUser("Card moved to " + cardList.getCategory() + " successfully ");
+			notifyUser("Card " + card.getCardName() + " moved to " + cardList.getCategory() + " successfully ");
+			
 			return Response.status(Response.Status.OK)
 					.entity("Card moved to " + cardList.getCategory() + " successfully ").build();
 
