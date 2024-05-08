@@ -26,7 +26,11 @@ public class Card {
 	private ArrayList<String> comment;
 	
 	 
-	
+	@Override
+	public String toString() {
+		return "Card [id=" + id + ", cardName=" + cardName + ", description=" + description + ", comment=" + comment
+				+ ", cardList=" + cardList.getCategory() + ", assignedUsers=" + assignedUsers + "]";
+	}
 	public long getId() {
 		return id;
 	}
