@@ -22,7 +22,6 @@ public class CardList {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long listId;
 	private String categoryName;
-	//private ArrayList <Card> cards;
 	
 	public long getId() {
 		return listId;
@@ -36,16 +35,7 @@ public class CardList {
 	public void setCategory(String category) {
 		this.categoryName = category;
 	}
-//	public ArrayList<Card> getCards() {
-//		return cards;
-//	}
-//	public void setCards(ArrayList<Card> cards) {
-//		this.cards = cards;
-//	}
-//	public CardList() {
-//        this.cards = new ArrayList<>();
-//    }
-	
+
 	@ManyToOne 
 	@JoinColumn(name="boardId")
 	@JsonBackReference

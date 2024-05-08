@@ -1,12 +1,16 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -16,14 +20,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Card {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	private String cardName;
 	private String description;
 	private ArrayList<String> comment;
 	
 	 
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {
@@ -63,5 +67,16 @@ public class Card {
 		this.cardList = cardList;
 	}
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_card", joinColumns = @JoinColumn(name = "card_id"), inverseJoinColumns = @JoinColumn(name = "id"))
+	private List <User> assignedUsers = new ArrayList<User>();
+	
+
+	public List<User> getAssignedUsers() {
+		return assignedUsers;
+	}
+	public void setAssignedUsers(List<User> user) {
+		this.assignedUsers = user;
+	}
 	
 }

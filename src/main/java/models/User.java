@@ -96,5 +96,17 @@ public class User {
 		this.userBoards = userBoards;
 	}
 	
+	@ManyToMany(mappedBy = "assignedUsers")
+	@JsonIgnore
+	private List<Card> userCards = new ArrayList<Card>();
+
+	public List<Card> getUserCards() {
+		return userCards;
+	}
+
+	public void setUserCards(List<Card> cards) {
+		this.userCards = cards;
+	}
+
 
 }
