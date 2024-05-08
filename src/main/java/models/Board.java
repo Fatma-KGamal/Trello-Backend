@@ -26,11 +26,11 @@ public class Board {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long boardId;
-	public long getBoard_id() {
+	public long getBoardId() {
 		return boardId;
 	}
-	public void setBoard_id(long board_id) {
-		this.boardId = board_id;
+	public void setBoardId(long boardId) {
+		this.boardId = boardId;
 	}
 
 	private String boardName;

@@ -14,6 +14,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,22 +34,17 @@ public class BoardController {
 	
 	//Users can create a new board with a unique name.
 	@POST
-	@Path("/create")
-	public Response createBoard(String name) {
-			try {
-            Board newBoard= boardService.createBoard(name);
-            return Response.status(Response.Status.CREATED).entity("Board created successfully \n" + newBoard).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
+	@Path("/create/{id}")
+	public Response createBoard(@PathParam("id") long userId, String name) {
+		return boardService.createBoard(userId, name);
     }
 	
 	//Users can delete a board.
 	@DELETE
-	@Path("/delete/{id}")
-	public Response deleteBoard(@PathParam("id") long id) {
+	@Path("/delete")
+	public Response deleteBoard(@QueryParam("userId") long userId, @QueryParam("boardId") long boardId) {
 		try {
-			boardService.deleteBoard(id);
+			boardService.deleteBoard(userId, boardId);
 			return Response.status(Response.Status.OK).entity("Board deleted successfully").build();
 		} catch (IllegalArgumentException e) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -57,22 +53,17 @@ public class BoardController {
 	
 	//Users can view all boards they have access to.
 	@GET
-	@Path("/getBoards/{id}")
-	public List<Board> getBoards(@PathParam("id") long id)
+	@Path("/getBoards/{teamLeaderId}/{userId}")
+	public Response getBoards(@PathParam("teamLeaderId") long teamLeaderId,@PathParam("userId") long userId)
 	{
-		return boardService.getBoards(id);
+		return boardService.getBoards(teamLeaderId,userId);
 	}
 	
 	//Users can invite other users to collaborate on a board.
 	@PUT
-	@Path("/inviteUser/{boardId}/{userId}")
-	public Response inviteUser(@PathParam("boardId") long boardId, @PathParam("userId") long userId) {
-		try {
-			boardService.inviteUser(boardId, userId);
-			return Response.status(Response.Status.OK).entity("User invited successfully").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+	@Path("/inviteUser/{userId}/{boardId}")
+	public Response inviteUser( @PathParam("userId") long userId,@PathParam("boardId") long boardId) {
+		return boardService.inviteUser( userId, boardId);
 	}
 	
 	//Users can view all boards
