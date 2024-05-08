@@ -20,6 +20,7 @@ public class BoardService {
 	private EntityManager entityManager;
 	
 	//Users can create a new board with a unique name.
+	// user should send id in the parameter to get the user who is creating the board
 	public Board createBoard(String name) {
 		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
@@ -38,6 +39,7 @@ public class BoardService {
 
 	//Users can delete a board.
 	public void deleteBoard(long id) {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
@@ -49,17 +51,22 @@ public class BoardService {
 	
 	//Users can view all boards they have access to.
 	public List<Board> getBoards(long id) {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
 		else {
-		User user = entityManager.find(User.class, id);
-		return user.getUserBoards();
+//		User user = entityManager.find(User.class, id);
+//		return user.getUserBoards();
+			TypedQuery<Board> query = entityManager.createQuery("SELECT b from Board b LEFT JOIN FETCH b.users u WHERE u.id = :id", Board.class);
+			query.setParameter("id", id);
+			return query.getResultList();
 		}
 	}
 	
 	//Users can invite other users to collaborate on a board.
 	public void inviteUser(long boardId, long userId) {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
@@ -75,11 +82,12 @@ public class BoardService {
 	
 	//Users can view all boards
 	public List<Board> getAllBoards() {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
 		else {
-		TypedQuery<Board> query = entityManager.createQuery("SELECT b from Board b LEFT JOIN FETCH b.users ", Board.class);
+		TypedQuery<Board> query = entityManager.createQuery("SELECT DISTINCT b from Board b LEFT JOIN FETCH b.users ", Board.class);
 		return query.getResultList();
 		}
 	}

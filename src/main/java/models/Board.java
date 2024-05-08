@@ -65,7 +65,7 @@ public class Board {
 	
 	@Override
 	public String toString() {
-		return "Board [boardId=" + boardId + ", boardName=" + boardName + ", users=" + users + ", cardList=" + cardList + "]";
+		return "Board [boardId=" + boardId + ", boardName=" + boardName + ", users=" + users + ", cardList=" + cardList +"]";
 	}
 	
 }

@@ -1,6 +1,7 @@
 package services;
 
 import javax.ejb.Stateless;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -21,6 +22,7 @@ public class ListService {
 	//Users can create lists within a board to categorize tasks in a specific board.
 	
 	public CardList createList(long boardId , String categoryName) {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
@@ -44,6 +46,7 @@ public class ListService {
 	
 	//Users can delete a list.
 	public void deleteList(long boardId , long listId) {
+		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			throw new IllegalArgumentException("User not logged in");
 		}
