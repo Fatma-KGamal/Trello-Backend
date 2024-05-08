@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -53,14 +56,24 @@ public class UserController {
 
 	@PUT
 	@Path("/editprofile/{id}")
-	public Response editProfile(@PathParam("id") long userId, @QueryParam("username") String newUsername,
-			@QueryParam("email") String newEmail, @QueryParam("password") String newPassword) {
-		try {
-			userService.editProfile(userId, newUsername, newEmail, newPassword);
+	public Response editProfile(@PathParam("id") long userId, @QueryParam("username") String username,
+			@QueryParam("email") String email, @QueryParam("password") String password) {
+		try {			
+			userService.editProfile(userId, username, email, password);
 			return Response.status(Response.Status.OK).entity("User profile updated successfully").build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
-
+	
+	@GET
+	@Path("/all")
+	public Response getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return Response.status(Response.Status.OK).entity(users).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 }

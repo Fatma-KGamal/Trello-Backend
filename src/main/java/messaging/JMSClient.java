@@ -15,28 +15,25 @@ import javax.jms.TextMessage;
 @Singleton
 @Startup
 public class JMSClient {
-	
+
 	@Resource(mappedName = "java:/jms/queue/DLQ")
 	private Queue queue;
 	@Inject
 	JMSContext context;
 
 	public void sendMessage(String message) {
-        // send message to the queue
-		
+		// send message to the queue
+
 		try {
 			JMSProducer producer = context.createProducer();
 			TextMessage txtMessage = context.createTextMessage(message);
 			producer.send(queue, message);
-			
-		}
-		catch(Exception e)
-		{
+
+		} catch (Exception e) {
 			e.printStackTrace();
-		
+
 		}
-		
-		
+
 	}
 
 }

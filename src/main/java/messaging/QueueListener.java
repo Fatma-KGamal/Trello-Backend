@@ -15,22 +15,20 @@ import javax.jms.TextMessage;
 
 import java.io.Serializable;
 
-
 @MessageDriven(name = "queue", activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/DLQ"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") })
 
+public class QueueListener implements MessageListener {
 
-	public class QueueListener implements MessageListener {
-	
-	    @Override
-	    public void onMessage(Message message)	{
-	        TextMessage textMessage = (TextMessage) message;
-	        try {
-	            System.out.println("Received message: " + textMessage.getText());
-	        } catch (JMSException e) {
-	            e.printStackTrace();
-	        }
-	    }
+	@Override
+	public void onMessage(Message message) {
+		TextMessage textMessage = (TextMessage) message;
+		try {
+			System.out.println("Received message: " + textMessage.getText());
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

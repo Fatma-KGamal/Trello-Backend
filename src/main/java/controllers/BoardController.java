@@ -26,20 +26,20 @@ import services.BoardService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BoardController {
-	
+
 	@Inject
 	private BoardService boardService;
-	@PersistenceContext (name="trello")
+	@PersistenceContext(name = "trello")
 	private EntityManager entityManager;
-	
-	//Users can create a new board with a unique name.
+
+	// Users can create a new board with a unique name.
 	@POST
 	@Path("/create/{id}")
 	public Response createBoard(@PathParam("id") long userId, String name) {
 		return boardService.createBoard(userId, name);
-    }
-	
-	//Users can delete a board.
+	}
+
+	// Users can delete a board.
 	@DELETE
 	@Path("/delete")
 	public Response deleteBoard(@QueryParam("userId") long userId, @QueryParam("boardId") long boardId) {
@@ -50,23 +50,23 @@ public class BoardController {
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
-	
-	//Users can view all boards they have access to.
+
+	// Users can view all boards they have access to.
 	@GET
 	@Path("/getBoards/{teamLeaderId}/{userId}")
-	public Response getBoards(@PathParam("teamLeaderId") long teamLeaderId,@PathParam("userId") long userId)
-	{
-		return boardService.getBoards(teamLeaderId,userId);
+	public Response getBoards(@PathParam("teamLeaderId") long teamLeaderId, @PathParam("userId") long userId) {
+		return boardService.getBoards(teamLeaderId, userId);
 	}
-	
-	//Users can invite other users to collaborate on a board.
+
+	// Users can invite other users to collaborate on a board.
 	@PUT
 	@Path("/inviteUser/{teamLeaderId}/{userId}/{boardId}")
-	public Response inviteUser( @PathParam("teamLeaderId") long teamLeaderId,@PathParam("userId") long userId,@PathParam("boardId") long boardId) {
-		return boardService.inviteUser(teamLeaderId,userId, boardId);
+	public Response inviteUser(@PathParam("teamLeaderId") long teamLeaderId, @PathParam("userId") long userId,
+			@PathParam("boardId") long boardId) {
+		return boardService.inviteUser(teamLeaderId, userId, boardId);
 	}
-	
-	//Users can view all boards
+
+	// Users can view all boards
 	@GET
 	@Path("/boards")
 	public List<Board> getAllBoards() {
