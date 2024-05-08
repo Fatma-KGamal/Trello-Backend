@@ -61,9 +61,9 @@ public class BoardController {
 	
 	//Users can invite other users to collaborate on a board.
 	@PUT
-	@Path("/inviteUser/{userId}/{boardId}")
-	public Response inviteUser( @PathParam("userId") long userId,@PathParam("boardId") long boardId) {
-		return boardService.inviteUser( userId, boardId);
+	@Path("/inviteUser/{teamLeaderId}/{userId}/{boardId}")
+	public Response inviteUser( @PathParam("teamLeaderId") long teamLeaderId,@PathParam("userId") long userId,@PathParam("boardId") long boardId) {
+		return boardService.inviteUser(teamLeaderId,userId, boardId);
 	}
 	
 	//Users can view all boards

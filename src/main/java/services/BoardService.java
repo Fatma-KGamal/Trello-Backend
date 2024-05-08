@@ -103,14 +103,15 @@ public class BoardService {
 	}
 	
 	//Users can invite other users to collaborate on a board.
-	public Response inviteUser(long userId,long boardId) {
+	public Response inviteUser(long teamLeaderId,long userId,long boardId) {
 		//check if the user is logged in
 		if (User.isCurrentUser() == false) {
 			return Response.status(Response.Status.BAD_REQUEST).entity("User is not logged in").build();
 		}
 		else {
+			User teamLeader = entityManager.find(User.class, teamLeaderId);
 			User user = entityManager.find(User.class, userId);
-			if (user.isAdmin() == false) {
+			if (teamLeader.isAdmin() == false) {
 				return Response.status(Response.Status.BAD_REQUEST).entity("User is not Team Leader").build();
 			}
 			else {
