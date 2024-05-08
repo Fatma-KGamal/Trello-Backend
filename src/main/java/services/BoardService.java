@@ -5,11 +5,13 @@ import java.util.List;
 
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
 
+import messaging.JMSClient;
 import models.Board;
 import models.User;
 
@@ -20,6 +22,9 @@ public class BoardService {
 	
 	@PersistenceContext (name="trello")
 	private EntityManager entityManager;
+	
+	@Inject
+	JMSClient jmsClient;
 	
 	//Users can create a new board with a unique name.
 	public Response createBoard(long userId , String name) {
@@ -45,6 +50,8 @@ public class BoardService {
 			boards.add(board);
 			user.setUserBoards(boards);
 			entityManager.merge(user);
+			//notify users when a board is created
+			notifyBoard("New board created: " + name);
 			return Response.status(Response.Status.CREATED).entity("Board created successfully \n" + board).build();
 			}
 		}
@@ -74,6 +81,8 @@ public class BoardService {
 					System.out.println("Hi :" + board);
 					entityManager.remove(board);
 //					entityManager.flush();
+					//notify users when a board is deleted
+					notifyBoard("Board deleted: " + board.getBoardName());
 					return Response.status(Response.Status.OK).entity("Board deleted successfully").build();
 				}
 				catch (IllegalArgumentException e) {
@@ -121,6 +130,8 @@ public class BoardService {
             	board.getUsers().add(user);
             	entityManager.merge(board);
             	entityManager.merge(user);
+            	//notify users when a user is invited
+            	notifyBoard("User invited to board: " + user.getUsername());
             	return Response.status(Response.Status.OK).entity("User invited Successfully").build();
 		}
 		}
@@ -136,6 +147,11 @@ public class BoardService {
 		TypedQuery<Board> query = entityManager.createQuery("SELECT DISTINCT b from Board b LEFT JOIN FETCH b.users ", Board.class);
 		return query.getResultList();
 		}
+	}
+	
+	//notify users when a board is created
+	public void notifyBoard(String message) {
+		jmsClient.sendMessage(message);
 	}
 	
 

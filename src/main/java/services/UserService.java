@@ -1,19 +1,22 @@
 package services;
 
 import java.util.List;
-
 import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import messaging.JMSClient;
 import models.User;
 
 @Stateless
 public class UserService {
 
 	User user;
+	@Inject
+	JMSClient jmsClient;
 
 	@PersistenceContext(name = "trello")
 	private EntityManager entityManager;
@@ -24,11 +27,6 @@ public class UserService {
 		if (!validEmail(user.getEmail())) {
 			throw new IllegalArgumentException("Invalid email address");
 		}
-
-		/*
-		 * if (!validPassword(user.getPassword())) { throw new
-		 * IllegalArgumentException("Invalid password"); }
-		 */
 
 		// check if email is already in use
 		List<User> EmailList = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
@@ -44,8 +42,10 @@ public class UserService {
 		if (!userNameList.isEmpty()) {
 			throw new IllegalArgumentException("Username already in use");
 		}
-
+		
 		entityManager.persist(user);
+		
+		notifyUser("New user registered: " + user.getUsername());
 		return user;
 	}
 
@@ -63,6 +63,7 @@ public class UserService {
 		}
 
 		user.setCurrentUser(true);
+		notifyUser("User logged in: " + user.getUsername());
 		return user;
 	}
 
@@ -76,11 +77,7 @@ public class UserService {
 		if (!validEmail(newEmail)) {
 			throw new IllegalArgumentException("Invalid email address");
 		}
-		/*
-		 * if (!validPassword(newPassword)) { throw new
-		 * IllegalArgumentException("Invalid password"); }
-		 */
-
+		
 		// check if email is already in use
 		List<User> EmailList = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
 				.setParameter("email", user.getEmail()).getResultList();
@@ -100,6 +97,7 @@ public class UserService {
 		user.setEmail(newEmail);
 		user.setPassword(newPassword);
 		entityManager.merge(user);
+		notifyUser("User profile updated: " + user.getUsername());
 	}
 
 	// checks the validity of the email
@@ -107,12 +105,11 @@ public class UserService {
 		String regex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 		return Pattern.matches(regex, email);
 	}
-
-	// checks the validity of the password
-	// (has 1 digit, lowerCase, 1 upperCase and no whitespace )
-	public boolean validPassword(String password) {
-		String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+)\r\n";
-		return Pattern.matches(regex, password);
+	
+	//notify user when a new message is received
+	public void notifyUser(String message) {
+		jmsClient.sendMessage(message);
 	}
+	
 
 }

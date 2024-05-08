@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import messaging.JMSClient;
 import models.Card;
 import models.CardList;
 import models.User;
@@ -19,6 +21,7 @@ public class CardService {
 	
 	@PersistenceContext (name="trello")
 	private EntityManager entityManager;
+	
 	
 	
 	public Card createCard(long listId,Card currentCard) {
