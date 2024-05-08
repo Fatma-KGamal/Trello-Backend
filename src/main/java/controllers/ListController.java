@@ -30,25 +30,15 @@ public class ListController {
 	
 	//Users can create lists within a board to categorize tasks.
 	@POST
-	@Path("/create/{boardId}")
-	public Response createList(@PathParam ("boardId") long boardId ,String name) {
-		try {
-			listService.createList(boardId,name);
-			return Response.status(Response.Status.CREATED).entity("List created successfully ").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+	@Path("/create/{userId}/{boardId}")
+	public Response createList(@PathParam ("userId") long userId , @PathParam ("boardId") long boardId ,String name) {
+		return listService.createList(userId,boardId,name);
 	}
 	
 	//Users can delete a list.
 	@DELETE
-	@Path("/delete/{boardId}/{listId}")
-	public Response deleteList(@PathParam ("boardId") long boardId , @PathParam ("listId") long listId) {
-		try {
-			listService.deleteList(boardId,listId);
-			return Response.status(Response.Status.OK).entity("List deleted successfully").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+	@Path("/delete/{userId}/{boardId}/{listId}")
+	public Response deleteList(@PathParam ("userId") long userId, @PathParam ("boardId") long boardId , @PathParam ("listId") long listId) {
+		return listService.deleteList(userId,boardId,listId);
 	}
 }
