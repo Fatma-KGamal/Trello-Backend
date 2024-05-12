@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -52,4 +53,20 @@ public class ListController {
 	public List<CardList> getLists() {
 		return listService.getAllLists();
 	}
-}
+	
+	//
+	@POST
+	@Path("/sprint")
+	public Response getSprints(@QueryParam("sprintID") long sprintID, @QueryParam("newSprintName")String newSprintName) {
+		return listService.endSprint(sprintID, newSprintName);
+			
+	}
+	
+	@GET
+	@Path("/report")
+	public Response getReport(@QueryParam("listId") long listId)
+	{
+		return listService.sprintReport(listId);
+	}
+		
+	}

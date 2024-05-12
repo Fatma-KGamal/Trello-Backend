@@ -41,6 +41,7 @@ public class CardService {
 		card.setDescription(currentCard.getDescription());
 		card.setComment(currentCard.getComment());
 		card.setCardList(cardList);
+		card.setStatus(currentCard.getStatus());
 		entityManager.persist(card);
 		cardList.getCard().add(card);
 		entityManager.merge(cardList);
@@ -142,4 +143,7 @@ public class CardService {
 	public void notifyUser(String message) {
 		jmsClient.sendMessage(message);
 	}
+	
+	
+	
 }

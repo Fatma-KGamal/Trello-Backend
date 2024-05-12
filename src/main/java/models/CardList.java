@@ -22,6 +22,7 @@ public class CardList {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long listId;
 	private String categoryName;
+	private String status="open";
 	
 	public long getId() {
 		return listId;
@@ -58,6 +59,12 @@ public class CardList {
 	
 	public void setCard(List<Card> card) {
 		this.card = card;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

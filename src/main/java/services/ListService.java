@@ -1,6 +1,9 @@
 package services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import messaging.JMSClient;
 import models.Board;
+import models.Card;
 import models.CardList;
 import models.User;
 
@@ -27,6 +31,8 @@ public class ListService {
 	@Inject
 	JMSClient jmsClient;
 
+	@Inject
+	CardService temp;
 	// Users can create lists within a board to categorize tasks in a specific
 	// board.
 
@@ -91,15 +97,73 @@ public class ListService {
 		notifyList("List deleted: " + cardList.getCategory());
 		return Response.status(Response.Status.OK).entity("List deleted successfully").build();
 	}
-	
+
 	public List<CardList> getAllLists() {
 		TypedQuery<CardList> query = entityManager.createQuery("SELECT c from CardList c", CardList.class);
 		return query.getResultList();
 	}
 
+	public Response endSprint(long sprintID, String newSprintName) {
+		try {
+			CardList oldSprint = entityManager.find(CardList.class, sprintID);
+			CardList newSprint = new CardList();
+			newSprint.setCategory(newSprintName);
+			newSprint.setBoard(oldSprint.getBoard());
+			
+			oldSprint.setStatus("Closed");
+			entityManager.persist(newSprint);
+			ArrayList<Card> unfinishedCards = new ArrayList<>();
+			for (Card card : oldSprint.getCard()) {
+				if (card.getStatus().equalsIgnoreCase("active")) {
+					unfinishedCards.add(card);
+				}
+			}
+
+			newSprint = entityManager.createQuery("SELECT c FROM CardList c WHERE c.categoryName = :cat",CardList.class)
+					.setParameter("cat", newSprintName).getSingleResult();
+			
+			
+			for (Card card : unfinishedCards) {
+				temp.moveCardToList(card.getId(),newSprint.getId());
+			}
+			
+			return Response.ok(newSprint).build();
+		}
+
+		catch (Exception e) {
+			return Response.serverError().entity(e.getMessage()).build();
+		}
+
+	}
+
 	// notify users when a list is created
 	public void notifyList(String message) {
 		jmsClient.sendMessage(message);
+	}
+	
+	public Response sprintReport(long listId)
+	{
+		try {
+			CardList sprint = entityManager.find(CardList.class,listId);
+			Map<String,String> Report = new HashMap<>();
+			Report.put("List Category",sprint.getCategory());
+			int active=0,done=0;
+			for(Card card: sprint.getCard()) {
+				if(card.getStatus().equalsIgnoreCase("active")){
+					active++;
+				}
+				else {
+					done++;
+				}
+				
+			}
+			Report.put("Total Finished",done+"");
+			Report.put("Total Unfinished", active+"");
+			return Response.ok(Report).build();
+		}catch(Exception e) {
+			return Response.serverError().entity(e.getMessage()).build();
+		}
+		
 	}
 
 }

@@ -43,12 +43,7 @@ public class BoardController {
 	@DELETE
 	@Path("/delete")
 	public Response deleteBoard(@QueryParam("userId") long userId, @QueryParam("boardId") long boardId) {
-		try {
-			boardService.deleteBoard(userId, boardId);
-			return Response.status(Response.Status.OK).entity("Board deleted successfully").build();
-		} catch (IllegalArgumentException e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
+		return boardService.deleteBoard(userId, boardId);
 	}
 
 	// Users can view all boards they have access to.

@@ -24,12 +24,12 @@ public class Card {
 	private String cardName;
 	private String description;
 	private ArrayList<String> comment;
-	
+	private String status = "active";
 	 
 	@Override
 	public String toString() {
 		return "Card [id=" + id + ", cardName=" + cardName + ", description=" + description + ", comment=" + comment
-				+ ", cardList=" + cardList.getCategory() + ", assignedUsers=" + assignedUsers + "]";
+				+ ", cardList=" + cardList.getCategory() + ", assignedUsers=" + assignedUsers +", Status: " + status + "]";
 	}
 	public long getId() {
 		return id;
@@ -81,6 +81,12 @@ public class Card {
 	}
 	public void setAssignedUsers(List<User> user) {
 		this.assignedUsers = user;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }
